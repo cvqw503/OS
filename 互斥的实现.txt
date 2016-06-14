@@ -1,0 +1,103 @@
+互斥：
+空闲让进
+忙则等待
+有限等待
+让权等待
+
+算法一、
+int turn = 0;
+P0:
+Do {
+	while (turn != 0) ;		// 进入区
+	进程P0的临界区代码CS0;	// 临界区
+	turn = 1;				// 退出区
+	进程P0的其他代码;
+}
+while (turn)
+P1:
+Do {
+	while (turn != 1);		// 进入区
+	进程P1的临界区代码CS1;	// 临界区
+	turn = 0;				// 退出区
+	进程P1的其他代码;
+}
+while (true)
+//P0和P1必须轮流进入临界区
+
+
+
+算法二、
+enum boolean{false, true};
+boolean flag[2] = {false, false};
+P0:
+Do {
+	while (flag[1]);
+	flag[0] = true;			// 进入区
+	进程P0的临界区代码CS0;	// 临界区
+	flag[0] = false;		// 退出区
+	进程P0的其他代码；
+}
+while (true) 
+P1:
+Do {
+	while (flag[0]);
+	flag[1] = true;
+	进程P1的临界区代码CS1；
+	flag[1] = flase;
+	进程P1的其他代码；
+}
+while (true)
+//如果两个进程同时进入，此时flag[]内的元素刚好都为false，两个进程会同时进入临界区
+
+
+
+算法三、
+enum boolean{false, true};
+boolean flag[2] = {false, false};
+P0:
+Do {
+	flag[0] = true;			// 进入区
+	while (flag[1]);		
+	进程P0的临界区代码CS0；	//临界区
+	flag[0] = false;		//退出区
+	进程P0的其他代码;
+}
+while (true)
+P1:
+Do {
+	flag[1] = true;
+	while (flag[0]);
+	进程P1的临界区代码CS1;
+	flag[1] = false;
+	进程P1的其他代码；
+}
+while(true);
+//如果两个进程想同时进入，此时flag[]内的元素刚好都为true，两个进程都无法进入临界区
+
+
+
+算法四、
+enum boolean{false, true};
+boolean flag[2] = {false, false};
+int true = 0;
+P0:
+Do {
+	flag[0] = true;					// 进入区
+	turn = 1;						// 注意注意！此时P0未进入临界区，P1仍然可以进入
+	while (flag[1] && turn == 1);	// 进入区
+	进程P0的临界区代码CS0;			// 临界区
+	flag[0] = false;				// 退出区
+	进程P0的其他代码；
+}
+while (ture)
+P1:
+Do {
+	flag[1] = true;
+	turn = 0;
+	while (flag[0] && turn == 0);
+	进程P1的临界区代码CS1；
+	flag[1] == false;
+	进程P1的其他代码；
+}
+while (true)			//真心不懂while(true)是什么条件
+
